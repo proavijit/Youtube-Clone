@@ -6,18 +6,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchVideoById } from "@/redux/singleVideoSlice";
 import RelatedVideos from "@/components/RelatedVideos";
 import { CustomVideoPlayer } from "@/components/video/CustomVideoPlayer";
+import type { RootState, AppDispatch } from "@/redux/store";
 
 export default function SingleVideoPage() {
     const { id } = useParams();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const { current, loading, error, related } = useSelector(
-        (state) => state.singleVideo
+        (state: RootState) => state.singleVideo
     );
 
     useEffect(() => {
         if (id) {
-            dispatch(fetchVideoById(id));
+            const videoId = Array.isArray(id) ? id[0] : id;
+            dispatch(fetchVideoById(videoId));
         }
     }, [id, dispatch]);
 

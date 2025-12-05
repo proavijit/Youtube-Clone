@@ -1,6 +1,35 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { youtube } from "@/utils/api";
 
+interface VideoSnippet {
+    title: string;
+    description: string;
+    channelTitle: string;
+    channelId: string;
+    publishedAt: string;
+    tags?: string[];
+    categoryId?: string;
+}
+
+interface VideoStatistics {
+    viewCount?: string;
+    likeCount?: string;
+    commentCount?: string;
+}
+
+interface Video {
+    id: string;
+    snippet: VideoSnippet;
+    statistics?: VideoStatistics;
+}
+
+interface SingleVideoState {
+    current: Video | null;
+    loading: boolean;
+    error: string | null | undefined;
+    related: any[];
+}
+
 export const fetchVideoById = createAsyncThunk(
     "singleVideo/fetch",
     async (id: string) => {
@@ -41,14 +70,16 @@ export const fetchVideoById = createAsyncThunk(
     }
 );
 
+const initialState: SingleVideoState = {
+    current: null,
+    loading: false,
+    error: null,
+    related: [],
+};
+
 const slice = createSlice({
     name: "singleVideo",
-    initialState: {
-        current: null,
-        loading: false,
-        error: null,
-        related: [],
-    },
+    initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
