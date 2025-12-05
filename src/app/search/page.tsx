@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { youtube } from "@/utils/api";
@@ -11,7 +11,7 @@ import { VideoGrid } from "@/components/video/VideoGrid";
 import type { RootState } from "@/redux/store";
 import { useState } from "react";
 
-export default function SearchPage() {
+function SearchPageContent() {
     const searchParams = useSearchParams();
     const query = searchParams.get("q") || "";
     const dispatch = useDispatch();
@@ -90,5 +90,20 @@ export default function SearchPage() {
                 </main>
             </div>
         </div>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-400 text-lg">Loading search...</p>
+                </div>
+            </div>
+        }>
+            <SearchPageContent />
+        </Suspense>
     );
 }
